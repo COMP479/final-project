@@ -5,7 +5,7 @@ This project crawls a set of Concordia webpages to determine general sentiment t
 
 Crawls pages using: https://github.com/yasserg/crawler4j
 
-Parses pages using: 
+Parses pages using: https://boilerpipe-web.appspot.com/
 
 ## Project Structure:
 ### Scraper:
