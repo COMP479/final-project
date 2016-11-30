@@ -1,11 +1,15 @@
 package Scraper;
 
+import com.uwyn.jhighlight.tools.FileUtils;
 import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.WebCrawler;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
 
+import javax.swing.text.html.HTML;
+import java.io.*;
 import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -17,6 +21,11 @@ public class MyCrawler extends WebCrawler {
 
     // For now lets restrict crawling to artsci pages
     private final static String DOMAIN = "http://www.concordia.ca/artsci/";
+    private final static String HTML_FOLDER = "src/html/";
+    private final static String FILE_NAME_PATTERN_STRING = "(?:[^/][\\d\\w\\.]+)$(?<=\\.\\w{3,4})";
+    private final static String FOLDER_NAME_PATTERN_STRING = "http(?:s?):\\/\\/([\\w]+\\.{1}[\\w]+\\.?[\\w]+)+\\/artsci\\/(\\w+)";
+    private final static Pattern FILE_NAME_PATTERN = Pattern.compile(FILE_NAME_PATTERN_STRING);
+    private final static Pattern FOLDER_NAME_PATTERN = Pattern.compile(FOLDER_NAME_PATTERN_STRING);
 
     /**
      * This method receives two parameters. The first parameter is the page
@@ -49,9 +58,41 @@ public class MyCrawler extends WebCrawler {
             String html = htmlParseData.getHtml();
             Set<WebURL> links = htmlParseData.getOutgoingUrls();
 
+            // lets save our html pages for now
+            Matcher file = FILE_NAME_PATTERN.matcher(url);
+            Matcher folder = FOLDER_NAME_PATTERN.matcher(url);
+            file.find();
+            folder.find();
+            String folderName = HTML_FOLDER + folder.group(2);
+            makeDirectory(folderName);
+            File htmlFile = new File(folderName + "/" + file.group());
+
+            try {
+                FileWriter htmlWriter = new FileWriter(htmlFile, false);
+                htmlWriter.write(html);
+                htmlWriter.flush();
+                htmlWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             System.out.println("Text length: " + text.length());
             System.out.println("Html length: " + html.length());
             System.out.println("Number of outgoing links: " + links.size());
+        }
+    }
+
+    private void makeDirectory(String folderName) {
+        File dir = new File(folderName);
+
+        if (!dir.exists()) {
+
+            try{
+                dir.mkdir();
+            }
+            catch(SecurityException se){
+                //handle it
+            }
         }
     }
 }
