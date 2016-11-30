@@ -15,6 +15,3 @@ git remote add main original_project_url
 Open eclipse
 `File -> Import -> Maven -> Existing Maven Project`
 Choose the cloned/downloaded repo
-
-
-
