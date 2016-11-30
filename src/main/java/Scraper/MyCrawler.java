@@ -1,13 +1,13 @@
 package Scraper;
 
-import com.uwyn.jhighlight.tools.FileUtils;
 import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.WebCrawler;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
 
-import javax.swing.text.html.HTML;
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
