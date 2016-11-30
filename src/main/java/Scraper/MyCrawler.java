@@ -13,8 +13,10 @@ import java.util.regex.Pattern;
  */
 public class MyCrawler extends WebCrawler {
 
-    private final static Pattern FILTERS = Pattern.compile(".*(\\.(css|js|gif|jpg"
-            + "|png|mp3|mp3|zip|gz))$");
+    private final static Pattern FILTERS = Pattern.compile(".*(\\.(css|js|gif|jpg|jpeg|png|mp3|mp3|zip|gz))$");
+
+    // For now lets restrict crawling to artsci pages
+    private final static String DOMAIN = "http://www.concordia.ca/artsci/";
 
     /**
      * This method receives two parameters. The first parameter is the page
@@ -29,7 +31,7 @@ public class MyCrawler extends WebCrawler {
     @Override
     public boolean shouldVisit(Page referringPage, WebURL url) {
         String href = url.getURL().toLowerCase();
-        return !FILTERS.matcher(href).matches() && href.startsWith("http://www.concordia.ca/");
+        return !FILTERS.matcher(href).matches() && href.startsWith(DOMAIN);
     }
 
     /**

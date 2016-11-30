@@ -1,5 +1,11 @@
 # COMP 479 - Final Project
 
+## Description:
+This project crawls a set of Concordia webpages to determine general sentiment towards certain subjects.
+
+Crawls pages using: https://github.com/yasserg/crawler4j
+Parses pages using: https://boilerpipe-web.appspot.com/
+
 ## Set up:
 
 ### Dependencies
