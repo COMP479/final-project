@@ -21,7 +21,7 @@ public class MyCrawler extends WebCrawler {
 
     // For now lets restrict crawling to artsci pages
     private final static String DOMAIN = "http://www.concordia.ca/artsci/";
-    private final static String HTML_FOLDER = "src/html/";
+    public final static String HTML_FOLDER = "src/html/";
     private final static String FILE_NAME_PATTERN_STRING = "(?:[^/][\\d\\w\\.]+)$(?<=\\.\\w{3,4})";
     private final static String FOLDER_NAME_PATTERN_STRING = "http(?:s?):\\/\\/([\\w]+\\.{1}[\\w]+\\.?[\\w]+)+\\/artsci\\/(\\w+)";
     private final static Pattern FILE_NAME_PATTERN = Pattern.compile(FILE_NAME_PATTERN_STRING);
