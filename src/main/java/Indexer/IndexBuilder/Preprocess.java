@@ -6,8 +6,9 @@ import Indexer.Models.DocumentArticle;
 import de.l3s.boilerpipe.BoilerpipeProcessingException;
 import de.l3s.boilerpipe.extractors.ArticleExtractor;
 
-import javax.xml.bind.JAXBException;
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class Preprocess {
 		}
 	}
 	
-	private static Collection parseHTML() throws FileNotFoundException, JAXBException {
+	private static Collection parseHTML() throws FileNotFoundException {
 		System.out.println("Parsing html files...");
 		List<DocumentArticle> allArticles = new ArrayList<DocumentArticle>();
 		ArrayList<File> files = new ArrayList<File>();

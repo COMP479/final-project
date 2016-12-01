@@ -39,8 +39,7 @@ public class Spimi {
 				//check if memory block size limit is reached
 				if ((usedMemory/1024/1024) > blockSizeLimit) {
 					//write block, free memory, create new index
-					BlockManager.writeBlock(blockCount, index);
-					blockCount++;
+					blockCount = writeBlock(index, blockCount);
 					index = null;
 					System.gc();
 					index = new Index();
@@ -57,15 +56,20 @@ public class Spimi {
 		
 		//if final index has data write the final block
 		if(!index.isEmpty()){
-			BlockManager.writeBlock(blockCount, index);
-			blockCount++;
+			blockCount = writeBlock(index, blockCount);
 			index = null;
 			System.gc();
 			index = new Index();
 		}
 		stats.writeStatistics(level);
 	}
-	
+
+	private static int writeBlock(Index index, int blockCount) {
+		BlockManager.writeBlock(blockCount, index);
+		blockCount++;
+		return blockCount;
+	}
+
 	public static List<String> tokenize(String content) {
 		List<String> tokens = new ArrayList<String>();
 		
