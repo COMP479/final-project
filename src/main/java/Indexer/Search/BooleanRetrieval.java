@@ -42,7 +42,7 @@ public class BooleanRetrieval {
 		Scanner in = new Scanner(System.in);
 		System.out.println("Enter a search query (quit to exit):");
 		String query = in.nextLine();
-		
+		in.close();
 		if (query.matches("quit")) {
 			break;
 		}

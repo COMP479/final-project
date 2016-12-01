@@ -1,5 +1,8 @@
 package Indexer.IndexBuilder;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -11,6 +14,7 @@ import Indexer.Models.Document;
 import Indexer.Models.DocumentArticle;
 import Indexer.Models.Index;
 
+
 public class Spimi {
 	public static void run (Collection collection, CompressionLevel level) {
 		//trigger garbage collection before getting initial memory
@@ -21,6 +25,8 @@ public class Spimi {
 		Index index = new Index();
 		int blockCount = 0;
 		int docWordCount = 0;
+		//Sentiment analysis of documents
+		ArrayList<Integer> sentimentValues = new ArrayList<Integer>();
 		
 		//loop every document in reuters
 		System.out.println("Tokenizing, compressing, and creating blocks from collection...");
@@ -49,10 +55,14 @@ public class Spimi {
 				index.insert(doc.getId(), term, 1);
 				docWordCount++;
 			}
+			//keep track of doc sentiment values
+			sentimentValues.add(doc.analyzeSentiment());
+			writeSentiment(sentimentValues, level);
 			//keep track of doc lengths
 			stats.insert(doc.getId(), docWordCount);
 			docWordCount = 0;
 		}
+		
 		
 		//if final index has data write the final block
 		if(!index.isEmpty()){
@@ -87,5 +97,23 @@ public class Spimi {
 		return tokens;
 	}
 	
+	private static void writeSentiment(ArrayList<Integer> SV, CompressionLevel level){
+		//write sentiment values to disk
+		try {
+			Writer writer = new FileWriter(System.getProperty("user.dir") + "/src/sentiment/sentimentValues" + level);
+
+			StringBuffer sb = new StringBuffer();
+			//write each term and posting list to a new line in the block
+			for(int i = 0; i < SV.size(); i++) {
+				sb.append("[" + (i+1) + "," + SV.get(i) + "]\n");
+			}
+			writer.write(sb.toString());
+			writer.close();
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 }

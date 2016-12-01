@@ -2,6 +2,8 @@ package Indexer.Models;
 
 import java.util.List;
 
+import Sentiment.SentimentDictionary;
+
 //The processed document
 public class Document {
 	//Article NEWID
@@ -32,5 +34,14 @@ public class Document {
 
 	public void setTokens(List<String> tokens) {
 		this.tokens = tokens;
+	}
+	
+	public int analyzeSentiment(){	
+		int sentimentValue = 0;
+		for(String token : tokens){
+			SentimentDictionary dict = SentimentDictionary.getInstance();
+			sentimentValue += dict.getValue(token);
+		}
+		return sentimentValue;
 	}
 }

@@ -4,6 +4,9 @@
 # User-specific stuff:
 .idea/workspace.xml
 .idea/tasks.xml
+.settings/
+.classpath
+.project
 
 # Sensitive or high-churn files:
 .idea/dataSources/
@@ -47,5 +50,7 @@ src/data/crawl/root/*
 src/html/*
 src/index/*
 src/stats/*
+src/sentiment/*
+!AFINN-111
 !*.gitkeep
 target/
