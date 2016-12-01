@@ -57,7 +57,6 @@ public class Spimi {
 			}
 			//keep track of doc sentiment values
 			sentimentValues.add(doc.analyzeSentiment());
-			writeSentiment(sentimentValues, level);
 			//keep track of doc lengths
 			stats.insert(doc.getId(), docWordCount);
 			docWordCount = 0;
@@ -72,6 +71,7 @@ public class Spimi {
 			index = new Index();
 		}
 		stats.writeStatistics(level);
+		writeSentiment(sentimentValues, level);
 	}
 
 	private static int writeBlock(Index index, int blockCount) {
