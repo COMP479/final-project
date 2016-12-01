@@ -46,5 +46,6 @@ fabric.properties
 src/data/crawl/root/*
 src/html/*
 src/index/*
+src/stats/*
 !*.gitkeep
 target/
