@@ -1,9 +1,5 @@
 package Indexer.Models;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
  
 public class Content {
 	//Title of the article (unused)
