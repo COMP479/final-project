@@ -11,15 +11,28 @@ import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
  */
 public class ScraperController {
     public static void main(String[] args) throws Exception {
-        String crawlStorageFolder = "/data/crawl/root";
+        String crawlStorageFolder = "src/data/crawl/root";
+
+//        when we want to accept params uncomment this
+//        if (args.length != 2) {
+//            System.out.print("Needed parameters: ");
+//            System.out.print("rootFolder (it will contain intermediate crawl data)");
+//            System.out.print("numberOfPages (number of concurrent threads)");
+//            return;
+//        }
 
         // the max number of pages to fetch can be changed later to be a arg
-        int maxPagesToFetch = 10;
+        //        String crawlStorageFolder = args[0];
+        //       maxPagesToFetch  = Integer.parseInt(args[1]);
+        int maxPagesToFetch = 100;
         int numberOfCrawlers = 7;
+//        int maxDepthOfCrawling = 1;
 
         CrawlConfig config = new CrawlConfig();
         config.setCrawlStorageFolder(crawlStorageFolder);
         config.setMaxPagesToFetch(maxPagesToFetch);
+//        config.setMaxDepthOfCrawling(maxDepthOfCrawling);
+        config.setIncludeBinaryContentInCrawling(false);
 
         /*
          * Instantiate the controller for this crawl.
@@ -42,6 +55,9 @@ public class ScraperController {
         controller.addSeed("http://www.concordia.ca/artsci/physics.html");
         controller.addSeed("http://www.concordia.ca/artsci/psychology.html");
         controller.addSeed("http://www.concordia.ca/artsci/sciencecollege.html");
+
+        // the mystery page
+        controller.addSeed("http://www.concordia.ca/artsci/science-college/about/life-at-the-college.html");
 
         /*
          * Start the crawl. This is a blocking operation, meaning that your code
