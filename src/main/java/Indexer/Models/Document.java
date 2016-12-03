@@ -8,12 +8,14 @@ import Sentiment.SentimentDictionary;
 public class Document {
 	//Article NEWID
 	Integer id;
+	String title;
 	//Tokenized body of the article
 	List<String> tokens;
 	
-	public Document(Integer id, List<String> tokens) {
+	public Document(Integer id, String title, List<String> tokens) {
 		super();
 		this.id = id;
+		this.title = title;
 		this.tokens = tokens;
 	}
 
@@ -26,6 +28,14 @@ public class Document {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+	
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public List<String> getTokens() {
