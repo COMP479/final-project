@@ -14,7 +14,7 @@ import Indexer.Enums.CompressionLevel;
 
 public class SentimentAnalysis {
 	public static void analyze(CompressionLevel level) {
-		String[] depts = { "biology", "chemistry", "exercisescience", "geography", "math", "physics", "psychology", "sciencecollege" };
+		String[] depts = { "biology", "chemistry", "exercise-science", "geography-planning-environment", "math-stats", "physics", "psychology", "science-college" };
 		Map<String, Integer> deptScores = new HashMap<String, Integer>();
 		deptScores = buildMap(deptScores, depts);
 		String svFilename =  System.getProperty("user.dir") + "/src/sentiment/sentimentValues" + level;

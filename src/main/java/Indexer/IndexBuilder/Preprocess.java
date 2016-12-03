@@ -44,7 +44,7 @@ public class Preprocess {
 				String dept = file.getParentFile().getName();
 				String title = file.getName();
 				System.out.println("adding " + title + " to collection with id: " + id);
-				Content content = new Content(dept + "-" + title, text);
+				Content content = new Content(dept + "_"  + title, text);
 				DocumentArticle doc = new DocumentArticle(id, content);
 				id = id + 1;
 				allArticles.add(doc);

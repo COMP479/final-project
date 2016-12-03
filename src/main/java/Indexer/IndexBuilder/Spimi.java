@@ -1,22 +1,14 @@
 package Indexer.IndexBuilder;
 
+import Indexer.Enums.CompressionLevel;
+import Indexer.Models.Collection;
+import Indexer.Models.*;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.StringTokenizer;
-
-import Indexer.Enums.CompressionLevel;
-import Indexer.Models.Collection;
-import Indexer.Models.CollectionStatistics;
-import Indexer.Models.Document;
-import Indexer.Models.DocumentArticle;
-import Indexer.Models.Index;
 
 
 public class Spimi {
@@ -35,12 +27,7 @@ public class Spimi {
 		//loop every document in reuters
 		System.out.println("Tokenizing, compressing, and creating blocks from collection...");
 		for (DocumentArticle document : collection.getDocuments()) {
-			Document doc = new Document();
-			
-			//build document with ID and compressed tokens
-			doc.setId(document.getId());
-			doc.setTitle(document.getContent().getTitle());
-			doc.setTokens(Compress.compress(tokenize(document.getContent().getBody()), level));
+			Document doc = createDocument(level, document);
 			
 			//loop every token in document
 			for(String term : doc.getTokens()) {
@@ -77,6 +64,16 @@ public class Spimi {
 		}
 		stats.writeStatistics(level);
 		writeSentiment(sentimentValues, level);
+	}
+
+	private static Document createDocument(CompressionLevel level, DocumentArticle document) {
+		Document doc = new Document();
+
+		//build document with ID and compressed tokens
+		doc.setId(document.getId());
+		doc.setTitle(document.getContent().getTitle());
+		doc.setTokens(Compress.compress(tokenize(document.getContent().getBody()), level));
+		return doc;
 	}
 
 	private static int writeBlock(Index index, int blockCount) {
