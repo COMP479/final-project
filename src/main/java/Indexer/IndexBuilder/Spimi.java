@@ -4,7 +4,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.StringTokenizer;
 
 import Indexer.Enums.CompressionLevel;
@@ -26,7 +30,7 @@ public class Spimi {
 		int blockCount = 0;
 		int docWordCount = 0;
 		//Sentiment analysis of documents
-		ArrayList<Integer> sentimentValues = new ArrayList<Integer>();
+		Map<String, Integer> sentimentValues = new HashMap<String, Integer>();
 		
 		//loop every document in reuters
 		System.out.println("Tokenizing, compressing, and creating blocks from collection...");
@@ -35,6 +39,7 @@ public class Spimi {
 			
 			//build document with ID and compressed tokens
 			doc.setId(document.getId());
+			doc.setTitle(document.getContent().getTitle());
 			doc.setTokens(Compress.compress(tokenize(document.getContent().getBody()), level));
 			
 			//loop every token in document
@@ -56,7 +61,7 @@ public class Spimi {
 				docWordCount++;
 			}
 			//keep track of doc sentiment values
-			sentimentValues.add(doc.analyzeSentiment());
+			sentimentValues.put(doc.getTitle(), doc.analyzeSentiment());
 			//keep track of doc lengths
 			stats.insert(doc.getId(), docWordCount);
 			docWordCount = 0;
@@ -97,16 +102,19 @@ public class Spimi {
 		return tokens;
 	}
 	
-	private static void writeSentiment(ArrayList<Integer> SV, CompressionLevel level){
+	private static void writeSentiment(Map<String, Integer> SV, CompressionLevel level){
 		//write sentiment values to disk
 		try {
 			Writer writer = new FileWriter(System.getProperty("user.dir") + "/src/sentiment/sentimentValues" + level);
 
 			StringBuffer sb = new StringBuffer();
 			//write each term and posting list to a new line in the block
-			for(int i = 0; i < SV.size(); i++) {
-				sb.append("[" + (i+1) + "," + SV.get(i) + "]\n");
-			}
+			Iterator<Entry<String, Integer>> it = SV.entrySet().iterator();
+		    while (it.hasNext()) {
+		        Map.Entry<String, Integer> pair = (Map.Entry<String, Integer>)it.next();
+		        sb.append("[" + pair.getKey() + "," + pair.getValue() + "]\n");
+		    }
+			
 			writer.write(sb.toString());
 			writer.close();
 

@@ -3,6 +3,7 @@ import Indexer.Enums.CompressionLevel;
 import Indexer.Models.Collection;
 import Indexer.Models.Content;
 import Indexer.Models.DocumentArticle;
+import Sentiment.SentimentAnalysis;
 import de.l3s.boilerpipe.BoilerpipeProcessingException;
 import de.l3s.boilerpipe.extractors.ArticleExtractor;
 
@@ -18,22 +19,11 @@ public class Preprocess {
 	public static void main(String[] args) {
 		try {
 			Collection collection = parseHTML();
-			System.out.println("Generating unfiltered index...");
-			Spimi.run(collection, CompressionLevel.UNFILTERED);
-			Merger.merge("unfilteredIndex.txt");
-			System.out.println("Generating numberless index...");
-			Spimi.run(collection, CompressionLevel.NO_NUMBERS);
-			Merger.merge("nonumbersIndex.txt");
 			System.out.println("Generating case folded index...");
 			Spimi.run(collection, CompressionLevel.CASE_FOLDING);
 			Merger.merge("casefoldedIndex.txt");
-			System.out.println("Generating 30 stop word index...");
-			Spimi.run(collection, CompressionLevel.STOPW_30);
-			Merger.merge("stopw30Index.txt");
-			System.out.println("Generating 150 stop word index...");
-			Spimi.run(collection, CompressionLevel.STOPW_150);
-			Merger.merge("stopw150Index.txt");
-			IndexStatistics.compareCompression();
+			SentimentAnalysis.analyze(CompressionLevel.CASE_FOLDING);
+			//IndexStatistics.compareCompression();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -51,9 +41,10 @@ public class Preprocess {
 			FileReader fr = new FileReader(file);
 			try {
 				String text = ArticleExtractor.INSTANCE.getText(fr);
+				String dept = file.getParentFile().getName();
 				String title = file.getName();
 				System.out.println("adding " + title + " to collection with id: " + id);
-				Content content = new Content(title, text);
+				Content content = new Content(dept + "-" + title, text);
 				DocumentArticle doc = new DocumentArticle(id, content);
 				id = id + 1;
 				allArticles.add(doc);

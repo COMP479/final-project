@@ -24,7 +24,7 @@ public class ScraperController {
         // the max number of pages to fetch can be changed later to be a arg
         //        String crawlStorageFolder = args[0];
         //       maxPagesToFetch  = Integer.parseInt(args[1]);
-        int maxPagesToFetch = 100;
+        int maxPagesToFetch = 1000;
         int numberOfCrawlers = 7;
 //        int maxDepthOfCrawling = 1;
 
