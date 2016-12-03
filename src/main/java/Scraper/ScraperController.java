@@ -49,12 +49,12 @@ public class ScraperController {
          */
         controller.addSeed("http://www.concordia.ca/artsci/biology.html");
         controller.addSeed("http://www.concordia.ca/artsci/chemistry.html");
-        controller.addSeed("http://www.concordia.ca/artsci/exercisescience.html");
-        controller.addSeed("http://www.concordia.ca/artsci/geography-planningenvironment.html");
+        controller.addSeed("http://www.concordia.ca/artsci/exercise-science.html");
+        controller.addSeed("http://www.concordia.ca/artsci/geography-planning-environment.html");
         controller.addSeed("http://www.concordia.ca/artsci/math-stats.html");
         controller.addSeed("http://www.concordia.ca/artsci/physics.html");
         controller.addSeed("http://www.concordia.ca/artsci/psychology.html");
-        controller.addSeed("http://www.concordia.ca/artsci/sciencecollege.html");
+        controller.addSeed("http://www.concordia.ca/artsci/science-college.html");
 
         // the mystery page
         controller.addSeed("http://www.concordia.ca/artsci/science-college/about/life-at-the-college.html");

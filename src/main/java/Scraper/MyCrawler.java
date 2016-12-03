@@ -23,7 +23,7 @@ public class MyCrawler extends WebCrawler {
     private final static String DOMAIN = "http://www.concordia.ca/artsci/";
     public final static String HTML_FOLDER = "src/html/";
     private final static String FILE_NAME_PATTERN_STRING = "(?:[^/][\\d\\w\\.]+)$(?<=\\.\\w{3,4})";
-    private final static String FOLDER_NAME_PATTERN_STRING = "http(?:s?):\\/\\/([\\w]+\\.{1}[\\w]+\\.?[\\w]+)+\\/artsci\\/(\\w+)";
+    private final static String FOLDER_NAME_PATTERN_STRING = "http(?:s?):\\/\\/([\\w]+\\.{1}[\\w]+\\.?[\\w]+)+\\/artsci\\/([\\w-]+)";
     private final static Pattern FILE_NAME_PATTERN = Pattern.compile(FILE_NAME_PATTERN_STRING);
     private final static Pattern FOLDER_NAME_PATTERN = Pattern.compile(FOLDER_NAME_PATTERN_STRING);
 
@@ -58,31 +58,40 @@ public class MyCrawler extends WebCrawler {
             String html = htmlParseData.getHtml();
             Set<WebURL> links = htmlParseData.getOutgoingUrls();
 
-            // lets save our html pages for now
-            Matcher file = FILE_NAME_PATTERN.matcher(url);
-            Matcher folder = FOLDER_NAME_PATTERN.matcher(url);
-            file.find();
-            folder.find();
-            String folderName = HTML_FOLDER + folder.group(2);
-            makeDirectory(folderName);
-            File htmlFile = new File(folderName + "/" + file.group());
+            saveHtmlFile(url, html);
 
-            try {
-                FileWriter htmlWriter = new FileWriter(htmlFile, false);
-                htmlWriter.write(html);
-                htmlWriter.flush();
-                htmlWriter.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            System.out.println("Text length: " + text.length());
-            System.out.println("Html length: " + html.length());
-            System.out.println("Number of outgoing links: " + links.size());
+//            System.out.println("Text length: " + text.length());
+//            System.out.println("Html length: " + html.length());
+//            System.out.println("Number of outgoing links: " + links.size());
         }
     }
 
-    private void makeDirectory(String folderName) {
+    private void saveHtmlFile(String url, String html) {
+        // lets save our html pages for now
+        String folderName = makeHtmlSubDirectory(url);
+        File htmlFile = makeHtmlFile(url, folderName);
+
+        try {
+            FileWriter htmlWriter = new FileWriter(htmlFile, false);
+            htmlWriter.write(html);
+            htmlWriter.flush();
+            htmlWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private File makeHtmlFile(String url, String folderName) {
+        Matcher file = FILE_NAME_PATTERN.matcher(url);
+        file.find();
+        return new File(folderName + "/" + file.group(0));
+    }
+
+    private String makeHtmlSubDirectory(String url) {
+        Matcher folder = FOLDER_NAME_PATTERN.matcher(url);
+        folder.find();
+        String folderName = HTML_FOLDER + folder.group(2);
+
         File dir = new File(folderName);
 
         if (!dir.exists()) {
@@ -94,5 +103,7 @@ public class MyCrawler extends WebCrawler {
                 //handle it
             }
         }
+
+        return folderName;
     }
 }
