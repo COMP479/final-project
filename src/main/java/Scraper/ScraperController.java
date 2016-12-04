@@ -1,10 +1,15 @@
 package Scraper;
 
+import org.apache.commons.io.FileUtils;
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
 import edu.uci.ics.crawler4j.fetcher.PageFetcher;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
+
+import java.io.File;
+
+import static Scraper.MyCrawler.HTML_FOLDER;
 
 /**
  * Created by pyoung on 2016-11-29.
@@ -57,12 +62,22 @@ public class ScraperController {
         controller.addSeed("http://www.concordia.ca/artsci/science-college.html");
 
         // the mystery page
-        //controller.addSeed("http://www.concordia.ca/artsci/science-college/about/life-at-the-college.html");
+        controller.addSeed("http://www.concordia.ca/artsci/science-college/about/life-at-the-college.html");
+
+        // erase old html files
+        File dir = new File(HTML_FOLDER);
+        if(dir.exists()) {
+            FileUtils.cleanDirectory(dir);
+            File gitkeep = new File(HTML_FOLDER + ".gitkeep");
+            gitkeep.createNewFile();
+        }
 
         /*
          * Start the crawl. This is a blocking operation, meaning that your code
          * will reach the line after this only when crawling is finished.
          */
+        System.out.println("Starting Scrape...");
         controller.start(MyCrawler.class, numberOfCrawlers);
+        System.out.println("Scrape completed succesfully");
     }
 }

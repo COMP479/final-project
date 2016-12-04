@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import Indexer.Enums.CompressionLevel;
+import com.google.common.primitives.Doubles;
 
 public class SentimentAnalysis {
 	public static void analyze(CompressionLevel level) {
@@ -43,6 +44,7 @@ public class SentimentAnalysis {
 			inputStream.close();
 			
 			writeDepartments(deptScores, level);
+			sentimentStats(deptScores);
 		}
 		catch(IOException e){
 			e.printStackTrace();
@@ -75,5 +77,13 @@ public class SentimentAnalysis {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	private static void sentimentStats(Map<String, Integer> deptScores) {
+		double[] values = Doubles.toArray(deptScores.values());
+		Statistics stats = new Statistics(values);
+		System.out.println("Average Sentiment score for a department: " + stats.getMean());
+		System.out.println("Median Sentiment score for a department: " + stats.getMedian());
+		System.out.println("Standard Deviation of the Sentiment score for a department: " + stats.getStandardDeviation());
 	}
 }

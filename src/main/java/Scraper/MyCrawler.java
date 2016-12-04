@@ -29,7 +29,7 @@ public class MyCrawler extends WebCrawler {
     private final static String PSYCHOLOGY = "http://www.concordia.ca/artsci/psychology";
     private final static String SCIENCE_COLLEGE = "http://www.concordia.ca/artsci/science-college";
     public final static String HTML_FOLDER = "src/html/";
-    private final static String FILE_NAME_PATTERN_STRING = "(?:[^/][\\d\\w\\.-]+)$(?<=\\.\\w{3,4})";
+    private final static String FILE_NAME_PATTERN_STRING = "((http[s]?|ftp):\\/)?\\/?([^:\\/\\s]+)(:([^\\/]*))?((\\/[\\w\\/-]+)*\\/)([\\w\\-\\.]+[^#?\\s]+)(\\?([^#]*))?(#(.*))?";
     private final static String FOLDER_NAME_PATTERN_STRING = "http(?:s?):\\/\\/([\\w]+\\.{1}[\\w]+\\.?[\\w]+)+\\/artsci\\/([\\w-]+)";
     private final static Pattern FILE_NAME_PATTERN = Pattern.compile(FILE_NAME_PATTERN_STRING);
     private final static Pattern FOLDER_NAME_PATTERN = Pattern.compile(FOLDER_NAME_PATTERN_STRING);
@@ -58,7 +58,7 @@ public class MyCrawler extends WebCrawler {
     @Override
     public void visit(Page page) {
         String url = page.getWebURL().getURL();
-        System.out.println("URL: " + url);
+//        System.out.println("URL: " + url);
 
         if (page.getParseData() instanceof HtmlParseData) {
             HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
@@ -92,14 +92,21 @@ public class MyCrawler extends WebCrawler {
     private File makeHtmlFile(String url, String folderName) {
         Matcher file = FILE_NAME_PATTERN.matcher(url);
         file.find();
-        return new File(folderName + "/" + file.group(0));
+        String filename = file.group(8);
+        if(file.group(10) != null)
+        {
+            filename = filename.replaceAll(".html", "");
+            filename = filename + "_" + file.group(10) + ".html";
+            filename = filename.replaceAll("[^a-zA-Z0-9.-]", "--");
+        }
+
+        return new File(folderName + "/" + filename);
     }
 
     private String makeHtmlSubDirectory(String url) {
         Matcher folder = FOLDER_NAME_PATTERN.matcher(url);
         folder.find();
-        String folderName = HTML_FOLDER + folder.group(2);
-
+        String folderName = HTML_FOLDER + folder.group(2).replaceAll("[^a-zA-Z0-9.-]", "--");
         File dir = new File(folderName);
 
         if (!dir.exists()) {

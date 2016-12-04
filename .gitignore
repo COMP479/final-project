@@ -51,6 +51,7 @@ src/html/*
 src/index/*
 src/stats/*
 src/sentiment/*
+src/docids/*
 target/
 !*.gitkeep
 !AFINN-111.txt
