@@ -61,7 +61,7 @@ public class CollectionStatistics {
 	
 	public void readStatistics(CompressionLevel level) {
 		try {
-			FileReader inputStream = new FileReader("stats/" + getFileName(level) + ".txt");
+			FileReader inputStream = new FileReader("src/stats/" + getFileName(level) + ".txt");
 			BufferedReader in = new BufferedReader(inputStream);
 			
 			String line = null;
