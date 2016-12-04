@@ -10,8 +10,14 @@ import de.l3s.boilerpipe.extractors.ArticleExtractor;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import static Scraper.MyCrawler.HTML_FOLDER;
 
@@ -19,12 +25,33 @@ public class Preprocess {
 	public static void main(String[] args) {
 		try {
 			Collection collection = parseHTML();
+			saveTitleIds(collection);
 			System.out.println("Generating case folded index...");
 			Spimi.run(collection, CompressionLevel.CASE_FOLDING);
 			Merger.merge("casefoldedIndex.txt");
 			SentimentAnalysis.analyze(CompressionLevel.CASE_FOLDING);
 			//IndexStatistics.compareCompression();
 		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private static void saveTitleIds(Collection collection) {
+		try {
+			Writer writer = new FileWriter(System.getProperty("user.dir") + "/src/docids/titlesAndDocs");
+
+			StringBuffer sb = new StringBuffer();
+			//write each term and posting list to a new line in the block
+			
+		    for (DocumentArticle article : collection.getDocuments()) {    
+		    	sb.append("[" + article.getId() + "," + article.getContent().getTitle() + "]\n");
+		    }
+			
+			writer.write(sb.toString());
+			writer.close();
+
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

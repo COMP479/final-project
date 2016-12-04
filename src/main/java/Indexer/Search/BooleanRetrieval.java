@@ -1,11 +1,15 @@
 package Indexer.Search;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.TreeSet;
@@ -19,6 +23,30 @@ import Indexer.Models.Index;
 import Indexer.Models.TermFrequencyPair;
 
 public class BooleanRetrieval {
+	private static Map<Integer, String> loadTitles() {
+		Map<Integer, String> titles = new HashMap<Integer, String>();
+		try {
+			FileReader inputStream = new FileReader(System.getProperty("user.dir") + "/src/docids/titlesAndDocs");
+			BufferedReader in = new BufferedReader(inputStream);
+			
+			String line = null;
+			while ((line = in.readLine()) != null) {
+				int fileStart = line.indexOf('[');
+				int fileEnd = line.indexOf(',');
+				int valueEnd = line.indexOf(']');
+				int id = Integer.parseInt(line.substring(fileStart+1, fileEnd));
+				String title = line.substring(fileEnd+1, valueEnd);
+				titles.put(id, title);
+			}
+			in.close();
+			inputStream.close();
+		}
+		catch(IOException e){
+			e.printStackTrace();
+		}
+		return titles;
+	}
+	
 	//bm25 ranking
 	private static double makeRanking(Integer id, double documentFrequency, double termFrequency, CollectionStatistics stats) {
 		double N = stats.size();
@@ -31,26 +59,23 @@ public class BooleanRetrieval {
 	}
 	
 	public static void main(String[] args) throws FileNotFoundException {
+		Map<Integer, String> titles = loadTitles();
 		CollectionStatistics stats = new CollectionStatistics();
-		stats.readStatistics(CompressionLevel.UNFILTERED);
+		stats.readStatistics(CompressionLevel.CASE_FOLDING);
 		
 		//read index
-		Index invertedIndex = BlockManager.readBlock("index/unfilteredIndex.txt");
+		Index invertedIndex = BlockManager.readBlock("src/index/casefoldedIndex.txt");
 		
 		//ask for user input
-		while (true) {
 		Scanner in = new Scanner(System.in);
-		System.out.println("Enter a search query (quit to exit):");
+		System.out.println("Enter a search query:");
 		String query = in.nextLine();
 		in.close();
-		if (query.matches("quit")) {
-			break;
-		}
 		
 		HashMap<Integer, Double> rankings = new HashMap<Integer, Double>();
 		
 		//parse query
-		List<String> queryTokens = Compress.compress(Spimi.tokenize(query), CompressionLevel.UNFILTERED);
+		List<String> queryTokens = Compress.compress(Spimi.tokenize(query), CompressionLevel.CASE_FOLDING);
 		//loop term
 		for(String token : queryTokens) {
 			//get docs
@@ -75,8 +100,7 @@ public class BooleanRetrieval {
 		
 		System.out.println("These are the matching documents:");
 		for (Entry<Integer, Double> entry : entries) {
-			System.out.println("Document: " + entry.getKey() + " Rank Weight: " + entry.getValue());
-		}
+			System.out.println("Document: " + titles.get(entry.getKey()) + " Rank Weight: " + entry.getValue());
 		}
 	}
 }

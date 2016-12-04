@@ -20,9 +20,16 @@ public class MyCrawler extends WebCrawler {
     private final static Pattern FILTERS = Pattern.compile(".*(\\.(css|js|gif|jpg|jpeg|png|mp3|mp3|zip|gz))$");
 
     // For now lets restrict crawling to artsci pages
-    private final static String DOMAIN = "http://www.concordia.ca/artsci/";
+    private final static String BIOLOGY = "http://www.concordia.ca/artsci/biology";
+    private final static String CHEMISTRY = "http://www.concordia.ca/artsci/chemistry";
+    private final static String EXERCISE_SCIENCE = "http://www.concordia.ca/artsci/exercise-science";
+    private final static String GEOGRAPHY_PLANNING_ENVIRONMENT = "http://www.concordia.ca/artsci/geography-planning-environment";
+    private final static String MATH_STATS = "http://www.concordia.ca/artsci/math-stats";
+    private final static String PHYSICS = "http://www.concordia.ca/artsci/physics";
+    private final static String PSYCHOLOGY = "http://www.concordia.ca/artsci/psychology";
+    private final static String SCIENCE_COLLEGE = "http://www.concordia.ca/artsci/science-college";
     public final static String HTML_FOLDER = "src/html/";
-    private final static String FILE_NAME_PATTERN_STRING = "(?:[^/][\\d\\w\\.]+)$(?<=\\.\\w{3,4})";
+    private final static String FILE_NAME_PATTERN_STRING = "(?:[^/][\\d\\w\\.-]+)$(?<=\\.\\w{3,4})";
     private final static String FOLDER_NAME_PATTERN_STRING = "http(?:s?):\\/\\/([\\w]+\\.{1}[\\w]+\\.?[\\w]+)+\\/artsci\\/([\\w-]+)";
     private final static Pattern FILE_NAME_PATTERN = Pattern.compile(FILE_NAME_PATTERN_STRING);
     private final static Pattern FOLDER_NAME_PATTERN = Pattern.compile(FOLDER_NAME_PATTERN_STRING);
@@ -40,7 +47,8 @@ public class MyCrawler extends WebCrawler {
     @Override
     public boolean shouldVisit(Page referringPage, WebURL url) {
         String href = url.getURL().toLowerCase();
-        return !FILTERS.matcher(href).matches() && href.startsWith(DOMAIN);
+        return !FILTERS.matcher(href).matches() && (href.startsWith(BIOLOGY) || href.startsWith(CHEMISTRY) || href.startsWith(EXERCISE_SCIENCE) || href.startsWith(GEOGRAPHY_PLANNING_ENVIRONMENT) || href.startsWith(MATH_STATS)
+        		|| href.startsWith(PHYSICS) || href.startsWith(PSYCHOLOGY) || href.startsWith(SCIENCE_COLLEGE));
     }
 
     /**
